@@ -7,30 +7,34 @@ var T = new Twit(config);
 
 var stream = T.stream('statuses/filter', { follow: 268536594});
 
+// var text = {
+//   status: "\"" + tweet.text + "\" #TrumpVerbatim"
+// };
+
+// function response {
+//
+// }
 stream.on('tweet', function (tweet) {
-  T.post('statuses/update', { status: tweet.text }, function(err, data, response) {
-    console.log(data)});
-})
+  T.post('statuses/update', {status: "\"" + tweet.text + "\" #TrumpVerbatim"},
+   function(err, data, response) {
+    console.log(data)
+  });
+});
+// observation: tweets that start with an @ will post, but only show up as a reply
 
-// T.post('statuses/update', { status: 'hello world!' }, function(err, data, response) {
-//   console.log(data)
-// })
 
-// T.get('followers/ids', { screen_name: 'Renenenenee' },  function (err, data, response) {
-//   console.log(data)
-// })
 // trumpid = 25073877
 // myid = 268536594
+
 // var params = {
 //   screen_name: "realDonaldTrump",
-//   // count: 4
+//   count: 5
 //   // q: 'from:realDonaldTrump',
 //   // count: 2
-//   //screen_name: "Renenenenee"
-// }
+// };
 //
-// T.get('users/show', params, gotData)
-// //T.get('statuses/user_timeline', params, gotData);
+// //T.get('users/show', params, gotData)
+// T.get('statuses/user_timeline', params, gotData);
 // //T.get('search/tweets', params, gotData)
 //
 // function gotData(err, data, response) {
@@ -45,3 +49,9 @@ stream.on('tweet', function (tweet) {
 //   // }
 //   console.log(data);
 // }
+//
+// tweet.entities.media.media_url
+// var params = { status: tweet.text, media_ids: [mediaIdStr] }
+//
+//       T.post('statuses/update', params, function (err, data, response) {
+//         console.log(data)
