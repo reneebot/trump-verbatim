@@ -8,8 +8,10 @@ var T = new Twit(config);
 var stream = T.stream('statuses/filter', { follow: 268536594});
 
 stream.on('tweet', function (tweet) {
-  console.log(tweet)
+  T.post('statuses/update', { status: tweet.text }, function(err, data, response) {
+    console.log(data)});
 })
+
 // T.post('statuses/update', { status: 'hello world!' }, function(err, data, response) {
 //   console.log(data)
 // })
