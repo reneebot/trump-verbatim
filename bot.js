@@ -5,7 +5,25 @@ var Twit = require('twit');
 var config = require('./config');
 var T = new Twit(config);
 
-var stream = T.stream('statuses/filter', { follow: 25073877});
+var trumpID = 25073877;
+var stream = T.stream('statuses/filter', { follow: trumpID});
+//var stream = T.stream('statuses/filter', { follow: 268536594});
+
+stream.on('tweet', function (tweet) {
+  if (tweet.user.id == trumpID) {
+  //if (tweet.user.id == 268536594) {
+    console.log("this was sent by the user we want to track");
+    T.post('statuses/update', {status: "\"" + tweet.text + "\" #TrumpVerbatim"},
+     function(err, data, response) {
+      console.log(data)
+    });
+  }
+  // now do something else
+  else {
+    console.log(tweet.user.id + " - " + tweet.user.screen_name)
+  }
+  // so we can ignore it
+});
 
 // var text = {
 //   status: "\"" + tweet.text + "\" #TrumpVerbatim"
@@ -14,12 +32,7 @@ var stream = T.stream('statuses/filter', { follow: 25073877});
 // function response {
 //
 // }
-stream.on('tweet', function (tweet) {
-  T.post('statuses/update', {status: "\"" + tweet.text + "\" #TrumpVerbatim"},
-   function(err, data, response) {
-    console.log(data)
-  });
-});
+
 // observation: tweets that start with an @ will post, but only show up as a reply
 
 
