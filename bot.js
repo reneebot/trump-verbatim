@@ -6,65 +6,59 @@ var config = require('./config');
 var T = new Twit(config);
 
 var trumpID = 25073877;
-var stream = T.stream('statuses/filter', { follow: trumpID});
-//var stream = T.stream('statuses/filter', { follow: 268536594});
+var botID = 850612023209717760; // @VerbatimPOTUS
+var myID = 268536594; // @Renenenenee
 
-stream.on('tweet', function (tweet) {
-  if (tweet.user.id == trumpID) {
-  //if (tweet.user.id == 268536594) {
-    console.log("this was sent by the user we want to track");
-    T.post('statuses/update', {status: "\"" + tweet.text + "\" #TrumpVerbatim"},
-     function(err, data, response) {
-      console.log(data)
-    });
-  }
-  // now do something else
-  else {
-    console.log(tweet.user.id + " - " + tweet.user.screen_name)
-  }
-  // so we can ignore it
+var stream = T.stream('statuses/filter', { follow: myID });
+
+stream.on('connect', function (request) {
+  console.log("[twit] Attempting to connect...");
 });
 
-// var text = {
-//   status: "\"" + tweet.text + "\" #TrumpVerbatim"
-// };
+stream.on('connected', function (response) {
+  console.log("[twit] Status code: %d, connection sucessful", response.statusCode);
+});
 
-// function response {
-//
-// }
+stream.on('reconnect', function (request, response, connectInterval) {
+  console.log("[twit] Status code: %d, reconnect scheduled in %d ms", response.statusCode, connectInterval);
+});
+
+stream.on('disconnect', function (disconnectMessage) {
+  console.log("[twit] Stream disconnected with code %d, reason: ",
+  disconnectMessage.disconnect.code, disconnectMessage.disconnect.reason);
+});
+
+stream.on('limit', function (limitMessage) {
+  console.log("[twit] Limit notice, num undelivered tweets: " + limitMessage.limit.track);
+});
+
+stream.on('error', function (error) {
+  console.log('[twit] Error code %d: %s. Status code: %d', error.code, error.message, error.statusCode);
+});
+
+stream.on('delete', function (deleteMessage) {
+  console.log(deleteMessage)
+  console.log('[twit] Tweet id %d deleted', deleteMessage.delete.status.id);
+});
+
+stream.on('tweet', function (tweet) {
+  if (tweet.user.id == myID) {
+    console.log('[twit] Got tweet!');
+    console.log(tweet)
+    // T.post('statuses/update', {status: "\"" + tweet.text + "\" #TrumpVerbatim"}, function(err, data, response) {
+    //   console.log(data);
+    // });
+  }
+});
 
 // observation: tweets that start with an @ will post, but only show up as a reply
-
-
-// trumpid = 25073877
-// myid = 268536594
-
-// var params = {
-//   screen_name: "realDonaldTrump",
-//   count: 5
-//   // q: 'from:realDonaldTrump',
-//   // count: 2
-// };
 //
-// //T.get('users/show', params, gotData)
-// T.get('statuses/user_timeline', params, gotData);
-// //T.get('search/tweets', params, gotData)
-//
-// function gotData(err, data, response) {
-//   // var tweets = data.statuses;
-//   // for (var i = 0; i < tweets.length; i++) {
-//   // console.log(tweets[i].text);
-//   // }
-//   // for (var i = 0; i < data.length; i++) {
-//   //   T.post('statuses/update', { status: data[i].text }, function(err, data, response) {
-//   // console.log(data)})
-//   //   //console.log(data[i].text)
-//   // }
-//   console.log(data);
-// }
-//
-// tweet.entities.media.media_url
-// var params = { status: tweet.text, media_ids: [mediaIdStr] }
-//
-//       T.post('statuses/update', params, function (err, data, response) {
-//         console.log(data)
+// RT @dunfIower: i’m fucking DEAD rn y’all have no idea https://t.co/ELO5u5SyEF
+// { delete:
+//    { status:
+//       { id: 1029996084872052700,
+//         id_str: '1029996084872052736',
+//         user_id: 268536594,
+//         user_id_str: '268536594' },
+//      timestamp_ms: '1534405189819' } }
+// [twit] Status id 1029996084872052700 deleted
