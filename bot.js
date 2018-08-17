@@ -42,6 +42,11 @@ stream.on('delete', function (deleteMessage) {
   console.log('[twit] Tweet id %s deleted', deleteMessage.delete.status.id_str);
 });
 
+stream.on('message', function (msg) {
+  console.log('[twit] Message received.');
+  console.log(msg);
+});
+
 stream.on('tweet', processTweet);
 
 function processTweet(tweet) {
