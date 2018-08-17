@@ -1,9 +1,15 @@
 console.log("The bot is starting");
 
+require('dotenv').config()
 var Twit = require('twit');
 
-var config = require('./config');
-var T = new Twit(config);
+var T = new Twit({
+  consumer_key: process.env.CONSUMER_KEY,
+  consumer_secret: process.env.CONSUMER_SECRET,
+  access_token: process.env.ACCESS_TOKEN,
+  access_token_secret: process.env.ACCESS_TOKEN_SECRET,
+  timeout_ms: 60*1000,
+});
 
 var TRUMPID = '25073877';
 var MYID = '268536594'; // @Renenenenee - for testing purposes
@@ -79,6 +85,7 @@ function handleQuoted(tweet) {
   return text;
 }
 
+// Maybe another implementation would be to split long tweets into multiple!
 function truncatePostProfit(text, isQuote) {
   console.log
   var MAXTWEETLENGTH = 280;
