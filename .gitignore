@@ -1,6 +1,6 @@
 node_modules/
-testing_logs/
-config.js
+testing/
 .env
-testing.js
 .DS_Store
+*.txt
+vt pro pic.jpg
