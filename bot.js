@@ -7,8 +7,9 @@ var T = new Twit(config);
 
 var TRUMPID = '25073877';
 var MYID = '268536594'; // @Renenenenee - for testing purposes
+var followID = TRUMPID;
 
-var stream = T.stream('statuses/filter', { follow: TRUMPID });
+var stream = T.stream('statuses/filter', { follow: followID });
 
 stream.on('connect', function (request) {
   console.log("[twit] Attempting to connect...");
@@ -38,7 +39,7 @@ stream.on('delete', function (deleteMessage) {
 stream.on('tweet', processTweet);
 
 function processTweet(tweet) {
-  if (tweet.user.id_str == TRUMPID) {
+  if (tweet.user.id_str == followID) {
     console.log("[twit] Ope, he's tweeting!");
 
     if (tweet.is_quote_status) {
@@ -87,15 +88,15 @@ function truncatePostProfit(text, isQuote) {
 
   if (isQuote) {
     tag = '"' + tag;
-    if ((rawLength + 15) > MAXTWEETLENGTH) {
-      text = text.substring(0, 261);
+    if ((rawLength + tag.length) > MAXTWEETLENGTH) {
       tag = '...' + tag;
+      text = text.substring(0, MAXTWEETLENGTH-tag.length-1); // there's an extra character in there? for some reason????
     }
   }
   else {
-    if ((rawLength + 14) > MAXTWEETLENGTH) {
-      text = text.substring(0, 262);
+    if ((rawLength + tag.length) > MAXTWEETLENGTH) {
       tag = '...' + tag;
+      text = text.substring(0, MAXTWEETLENGTH-tag.length);
     }
   }
 
