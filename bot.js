@@ -98,7 +98,7 @@ function truncatePostProfit(text, isQuote) { // if isQuote is true, tag receives
   var tag = ' #TrumpVerbatim'
 
   // quick and dirty replace
-  text = text.replace(";amp", "&")
+  text = text.replace("&amp;", "&")
   var rawLength = text.length;
 
   if (isQuote) {
