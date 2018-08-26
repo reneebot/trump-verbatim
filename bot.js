@@ -1,3 +1,9 @@
+// TO DO:
+//  1. Fix ampersand?
+//  2. Split long tweets into multiple?
+//  3. Figure out how to deal with media
+//  4. Make use of tweet entities
+//  5. Integrate with @POTUS account
 console.log("The bot is starting");
 
 require('dotenv').config()
@@ -86,11 +92,13 @@ function handleQuoted(tweet) {
 }
 
 // Maybe another implementation would be to split long tweets into multiple!
-function truncatePostProfit(text, isQuote) {
+function truncatePostProfit(text, isQuote) { // if isQuote is true, tag receives a closing "
   console.log
   var MAXTWEETLENGTH = 280;
   var tag = ' #TrumpVerbatim'
 
+  // quick and dirty replace
+  text = text.replace(";amp", "&")
   var rawLength = text.length;
 
   if (isQuote) {
